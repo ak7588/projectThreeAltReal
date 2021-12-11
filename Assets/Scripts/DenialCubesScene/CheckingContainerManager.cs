@@ -11,6 +11,7 @@ public class CheckingContainerManager : MonoBehaviour
     private int numTotal = 8;
     private int visible = 4;
     private int oneToShow = 8;
+    int active;
 
     private void Awake()
     {
@@ -40,19 +41,20 @@ public class CheckingContainerManager : MonoBehaviour
         else if (other.gameObject.CompareTag("Denial") || other.gameObject.CompareTag("Bargain") || other.gameObject.CompareTag("Depression") || other.gameObject.CompareTag("Acceptance") || other.gameObject.CompareTag("Anger"))
         {
             gameObject.GetComponent<MeshRenderer>().material = wrong;
-            StartCoroutine(InvokeCoroutine(other.gameObject));
-            StartCoroutine("LoadNext");
+            //StartCoroutine(InvokeCoroutine(other.gameObject));
+            //StartCoroutine("LoadNext");
+            StartCoroutine(LoadNext(other.gameObject));
         }
     }
 
-    IEnumerator InvokeCoroutine(GameObject other)
-    {
-        yield return new WaitForSeconds(1);
-        other.SetActive(false);
-        container.GetComponent<MeshRenderer>().material = defaultMaterial;
-        yield return null;
+    //IEnumerator InvokeCoroutine(GameObject other)
+    //{
+    //    yield return new WaitForSeconds(1);
+    //    other.SetActive(false);
+    //    container.GetComponent<MeshRenderer>().material = defaultMaterial;
+    //    yield return null;
 
-    }
+    //}
 
     private void OnTriggerExit(Collider other)
     {
@@ -60,34 +62,56 @@ public class CheckingContainerManager : MonoBehaviour
         container.GetComponent<MeshRenderer>().material = defaultMaterial;
     }
 
-    IEnumerator LoadNext() {
+    IEnumerator LoadNext(GameObject other) {
+        yield return new WaitForSeconds(1);
+        other.SetActive(false);
+        container.GetComponent<MeshRenderer>().material = defaultMaterial;
         //GameObject lastElement = fakesArray[fakesArray.Length - 1];
         //lastElement.SetActive(true);
         fakesArray[visible].SetActive(true);
         //oneToShow--;
         visible++;
         //fakesArray = fakesArray.Take(fakesArray.Length - 1).ToArray();
-        int random;
-        do
-        {
-            random = Random.Range(0, visible);
-        } while (!fakesArray[random].activeSelf);
-        
-        for (int i = 0; i < visible; i++)
-        {
-            if (i == random)
-            {
-                fakesArray[i].transform.GetChild(2).tag = "RealGem";
-                //fakesArray[i].transform.GetChild(2).GetComponent<MeshRenderer>().material = right;
 
-            }
-            else
-            {
-                fakesArray[i].transform.GetChild(2).tag = "Denial";
-                //fakesArray[i].transform.GetChild(2).GetComponent<MeshRenderer>().material = defaultMaterial;
-            }
+        List<int> active = new List<int>();
 
+        int index = 0;
+        foreach (var fake in fakesArray) {
+            if (fake.activeSelf) active.Add(index);
+            ++index;
         }
+
+        if (visible == 8 && active.Count == 1)
+        {
+            fakesArray[active[0]].transform.GetChild(2).tag = "RealGem";
+            fakesArray[active[0]].transform.GetChild(2).GetComponent<MeshRenderer>().material = right;
+        }
+        else
+        {
+            int random = Random.Range(0, active.Count);
+            //do
+            //{
+            //    random = Random.Range(0, visible);
+            //} while (!fakesArray[random].activeSelf);
+
+            for (int i = 0; i < visible; i++)
+            {
+                if (i == active[random])
+                {
+                    fakesArray[i].transform.GetChild(2).tag = "RealGem";
+                    fakesArray[i].transform.GetChild(2).GetComponent<MeshRenderer>().material = right;
+
+                }
+                else
+                {
+                    fakesArray[i].transform.GetChild(2).tag = "Denial";
+                    fakesArray[i].transform.GetChild(2).GetComponent<MeshRenderer>().material = defaultMaterial;
+                }
+
+            }
+        }
+
+    
         
         
         yield return null;

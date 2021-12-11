@@ -7,9 +7,13 @@ public class AnimationController : MonoBehaviour
     public GameObject NPC;
     Animator animator;
     int count = 0;
+    public AudioSource playOnAwake;
+    public AudioSource npc;
+    public AudioSource npcReply;
 
     private void Awake()
     {
+        playOnAwake.Play();
         animator = NPC.GetComponent<Animator>();
     }
 
@@ -38,9 +42,12 @@ public class AnimationController : MonoBehaviour
 
     IEnumerator NPCTalking()
     {
-        // play audio
-        yield return new WaitForSeconds(10);
+        playOnAwake.Stop();
+        npc.Play();
+        yield return new WaitForSeconds(35);
         animator.SetBool("isTalking", false);
+        yield return new WaitForSeconds(1);
+        npcReply.Play();
         yield return null;
     }
 }

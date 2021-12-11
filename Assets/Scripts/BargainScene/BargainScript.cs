@@ -7,6 +7,7 @@ public class BargainScript : MonoBehaviour
     public Material right, wrong, defaultMaterial;
     public GameObject container;
     public GameObject greenGate;
+    public AudioSource completeAudio;
 
     private void Start()
     {
@@ -20,6 +21,7 @@ public class BargainScript : MonoBehaviour
             gameObject.GetComponent<MeshRenderer>().material = right;
             GameObject.Find("gateGreen").transform.GetChild(5).GetComponent<LoadScene>().canUnload = true;
             GameObject.Find("gateGreen").GetComponent<GateController>().isCompleted = true; // check if completed
+
         }
         else if (other.gameObject.CompareTag("Anger") || other.gameObject.CompareTag("Denial") || other.gameObject.CompareTag("Depression") || other.gameObject.CompareTag("Acceptance"))
         {

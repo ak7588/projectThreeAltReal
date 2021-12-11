@@ -14,7 +14,6 @@ public class LoadScene : MonoBehaviour
     public string destination;
     public string tags;
     public string tag2;
-
     public bool canUnload = true;
 
     // Start is called before the first frame update
