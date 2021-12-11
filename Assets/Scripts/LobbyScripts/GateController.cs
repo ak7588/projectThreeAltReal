@@ -13,6 +13,9 @@ public class GateController : MonoBehaviour
     //bool rActive;
     //bool yActive;
     //bool wActive;
+
+    public bool isCompleted;
+
     public GameObject gate;
     bool active;
     public AudioSource openGate;
@@ -21,6 +24,7 @@ public class GateController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isCompleted = false;
         active = false;
         gate.SetActive(active);
 

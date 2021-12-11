@@ -35,6 +35,7 @@ public class CheckingContainerManager : MonoBehaviour
         if (other.gameObject.CompareTag("RealGem"))
         {
             gameObject.GetComponent<MeshRenderer>().material = right;
+            GameObject.Find("gatePurple").GetComponent<GateController>().isCompleted = true; // check if completed
         }
         else if (other.gameObject.CompareTag("Denial") || other.gameObject.CompareTag("Bargain") || other.gameObject.CompareTag("Depression") || other.gameObject.CompareTag("Acceptance") || other.gameObject.CompareTag("Anger"))
         {

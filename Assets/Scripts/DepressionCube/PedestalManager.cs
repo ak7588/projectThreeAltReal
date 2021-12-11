@@ -32,6 +32,7 @@ public class PedestalManager : MonoBehaviour
         else
         {
             GetComponent<MeshRenderer>().material = passMaterial;
+            GameObject.Find("gateBlue").GetComponent<GateController>().isCompleted = true; // check if completed
         }
     }
 

@@ -12,6 +12,7 @@ public class AngerScript : MonoBehaviour
         if (other.gameObject.CompareTag("Anger"))
         {
             gameObject.GetComponent<MeshRenderer>().material = right;
+            GameObject.Find("gateRed").GetComponent<GateController>().isCompleted = true; // check if completed
         }
         else if(other.gameObject.CompareTag("Bargain") || other.gameObject.CompareTag("Denial") || other.gameObject.CompareTag("Depression") || other.gameObject.CompareTag("Acceptance"))
         {
