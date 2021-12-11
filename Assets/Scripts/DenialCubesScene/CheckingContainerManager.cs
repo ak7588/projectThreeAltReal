@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class CheckingContainerManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class CheckingContainerManager : MonoBehaviour
     private int visible = 4;
     private int oneToShow = 8;
     int active;
+    Coroutine checker;
 
     private void Awake()
     {
@@ -27,7 +29,8 @@ public class CheckingContainerManager : MonoBehaviour
             {
                 obj.SetActive(false);
             }
-            fakesArray[i] = obj;
+            if(obj != null)
+                fakesArray[i] = obj;
         }
     }
 
@@ -43,7 +46,7 @@ public class CheckingContainerManager : MonoBehaviour
             gameObject.GetComponent<MeshRenderer>().material = wrong;
             //StartCoroutine(InvokeCoroutine(other.gameObject));
             //StartCoroutine("LoadNext");
-            StartCoroutine(LoadNext(other.gameObject));
+            checker = StartCoroutine(LoadNext(other.gameObject));
         }
     }
 
@@ -58,7 +61,7 @@ public class CheckingContainerManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        StopCoroutine("LoadNext");
+        StopCoroutine(checker);
         container.GetComponent<MeshRenderer>().material = defaultMaterial;
     }
 
@@ -75,16 +78,22 @@ public class CheckingContainerManager : MonoBehaviour
 
         List<int> active = new List<int>();
 
+        Debug.Log("getting random index");
+
         int index = 0;
         foreach (var fake in fakesArray) {
-            if (fake.activeSelf) active.Add(index);
+            if (fake.GetComponentInChildren<XRGrabInteractable>(true).gameObject.activeInHierarchy) active.Add(index);
             ++index;
         }
 
+        Debug.Log("setting gems");
+
         if (visible == 8 && active.Count == 1)
         {
-            fakesArray[active[0]].transform.GetChild(2).tag = "RealGem";
-            fakesArray[active[0]].transform.GetChild(2).GetComponent<MeshRenderer>().material = right;
+            Debug.Log("setting last gem");
+            GameObject obj = fakesArray[active[0]].GetComponentInChildren<XRGrabInteractable>(true).gameObject;
+            obj.tag = "RealGem";
+            //obj.GetComponentInChildren<MeshRenderer>().material = right;
         }
         else
         {
@@ -94,18 +103,56 @@ public class CheckingContainerManager : MonoBehaviour
             //    random = Random.Range(0, visible);
             //} while (!fakesArray[random].activeSelf);
 
+            for(int i = 0; i < active.Count; ++i)
+            {
+                Debug.Log("active" + i + ": " + active[i]);
+            }
+            for (int i = 0; i < fakesArray.Length; ++i)
+            {
+                Debug.Log("fake" + i + ": " + (fakesArray[i] != null ? fakesArray[i].name : "null"));
+            }
+            Debug.Log("visible: " + visible + ", random: " + random + ", chosen: " + active[random]);
+
             for (int i = 0; i < visible; i++)
             {
                 if (i == active[random])
                 {
-                    fakesArray[i].transform.GetChild(2).tag = "RealGem";
-                    fakesArray[i].transform.GetChild(2).GetComponent<MeshRenderer>().material = right;
+                    Debug.Log("setting correct gem to index: " + active[random]);
 
+                    //fakesArray[i].transform.GetChild(2).tag = "RealGem";
+                    //fakesArray[i].transform.GetChild(2).GetComponentInChildren<MeshRenderer>().material = right;
+
+                    XRGrabInteractable obj = fakesArray[i].GetComponentInChildren<XRGrabInteractable>();
+
+                    if(obj == null)
+                    {
+                        Debug.LogError("chosen active index was NULL!");
+                    }
+                    else
+                    {
+                        obj.gameObject.tag = "RealGem";
+                        //obj.gameObject.GetComponentInChildren<MeshRenderer>().material = right;
+                    }
                 }
                 else
                 {
-                    fakesArray[i].transform.GetChild(2).tag = "Denial";
-                    fakesArray[i].transform.GetChild(2).GetComponent<MeshRenderer>().material = defaultMaterial;
+                    Debug.Log("setting incorrect gem to index: " + i);
+
+                    //fakesArray[i].transform.GetChild(2).tag = "Denial";
+                    //fakesArray[i].transform.GetChild(2).GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
+
+                    XRGrabInteractable obj = fakesArray[i].GetComponentInChildren<XRGrabInteractable>();
+
+                    if (obj == null)
+                    {
+                        Debug.Log("incorrect index was NULL!");
+                    }
+                    else
+                    { 
+                        obj.gameObject.tag = "Denial";
+                        //obj.gameObject.GetComponentInChildren<MeshRenderer>().material = defaultMaterial;
+                    }
+
                 }
 
             }
