@@ -5,6 +5,7 @@ using UnityEngine;
 public class TableController : MonoBehaviour
 {
     public GameObject container;
+    public AudioSource plinthAppear;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +18,8 @@ public class TableController : MonoBehaviour
         if (collision.CompareTag("Ring"))
         {
             container.SetActive(true);
+            StartCoroutine("playAudio");
+
         }
     }
 
@@ -25,6 +28,19 @@ public class TableController : MonoBehaviour
         if (collision.CompareTag("Ring"))
         {
             container.SetActive(false);
+            StartCoroutine("stopAudio");
         }
+    }
+
+    IEnumerator playAudio()
+    {
+        plinthAppear.Play();
+        yield return null;
+    }
+
+    IEnumerator stopAudio()
+    {
+        plinthAppear.Stop();
+        yield return null;
     }
 }

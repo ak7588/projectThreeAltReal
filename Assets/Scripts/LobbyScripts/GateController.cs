@@ -20,6 +20,7 @@ public class GateController : MonoBehaviour
     bool active;
     public AudioSource openGate;
     private int counter = 0;
+    public AudioSource awakeAudio;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,8 @@ public class GateController : MonoBehaviour
         gate.SetActive(active);
 
         openGate = GetComponent<AudioSource>();
+
+        awakeAudio.Play();
 
         //bActive = false;
         //rActive = false;
@@ -48,6 +51,7 @@ public class GateController : MonoBehaviour
             gate.SetActive(active);
             if (counter < 1)
             {
+                awakeAudio.Stop();
                 openGate.Play();
                 counter++;
             }
