@@ -11,9 +11,15 @@ public class CheckingContainerManager : MonoBehaviour
     private GameObject[] fakesArray;
     private int numTotal = 8;
     private int visible = 4;
-    private int oneToShow = 8;
-    int active;
     Coroutine checker;
+
+    public AudioSource playOnAwake;
+    public AudioSource completedAudio;
+    public AudioSource wrong1;
+    public AudioSource wrong2;
+    public AudioSource wrong3;
+    public AudioSource wrong4;
+    int audioCounter = 1;
 
     private void Awake()
     {
@@ -32,6 +38,7 @@ public class CheckingContainerManager : MonoBehaviour
             if(obj != null)
                 fakesArray[i] = obj;
         }
+        playOnAwake.Play();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,6 +47,8 @@ public class CheckingContainerManager : MonoBehaviour
         {
             gameObject.GetComponent<MeshRenderer>().material = right;
             GameObject.Find("gatePurple").GetComponent<GateController>().isCompleted = true; // check if completed
+            StartCoroutine("playAudio");
+            
         }
         else if (other.gameObject.CompareTag("Denial") || other.gameObject.CompareTag("Bargain") || other.gameObject.CompareTag("Depression") || other.gameObject.CompareTag("Acceptance") || other.gameObject.CompareTag("Anger"))
         {
@@ -69,6 +78,28 @@ public class CheckingContainerManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         other.SetActive(false);
         container.GetComponent<MeshRenderer>().material = defaultMaterial;
+
+        if (audioCounter == 1)
+        {
+            wrong1.Play();
+            audioCounter++;
+        }
+        else if (audioCounter == 2)
+        {
+            wrong2.Play();
+            audioCounter++;
+        }
+        else if (audioCounter == 3)
+        {
+            wrong3.Play();
+            audioCounter++;
+        }
+        else if (audioCounter == 4)
+        {
+            wrong4.Play();
+            audioCounter = 1;
+        }
+
         //GameObject lastElement = fakesArray[fakesArray.Length - 1];
         //lastElement.SetActive(true);
         fakesArray[visible].SetActive(true);
@@ -161,6 +192,12 @@ public class CheckingContainerManager : MonoBehaviour
     
         
         
+        yield return null;
+    }
+
+    IEnumerator playAudio()
+    {
+        completedAudio.Play();
         yield return null;
     }
 }

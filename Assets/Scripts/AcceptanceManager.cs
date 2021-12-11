@@ -1,35 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class AcceptanceManager : MonoBehaviour
 {
-    private bool denialCompleted;
-    private bool angerCompleted;
-    private bool bargainCompleted;
-    private bool depressionCompleted;
-
-    //public GameObject whiteJewel;
 
     public GateController purpleGate;
+    public GateController redGate;
+    public GateController greenGate;
+    public GateController blueGate;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        gameObject.GetComponent<XRGrabInteractable>().enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        denialCompleted = GameObject.Find("gatePurple").GetComponent<GateController>().isCompleted;
-        angerCompleted = GameObject.Find("gateRed").GetComponent<GateController>().isCompleted;
-        bargainCompleted = GameObject.Find("gateGreen").GetComponent<GateController>().isCompleted;
-        depressionCompleted = GameObject.Find("gateBlue").GetComponent<GateController>().isCompleted;
-        if (denialCompleted && angerCompleted && bargainCompleted && depressionCompleted)
+        if (redGate.isCompleted && purpleGate.isCompleted && blueGate.isCompleted && greenGate.isCompleted)
         {
-            gameObject.SetActive(true); // set white to active
+            gameObject.GetComponent<XRGrabInteractable>().enabled = true;
             // transition to acceptance scene
         }
     }
