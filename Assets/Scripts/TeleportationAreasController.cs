@@ -6,7 +6,6 @@ public class TeleportationAreasController : MonoBehaviour
 {
     public GameObject Area1;
     public GameObject Area2;
-    Renderer cubeRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +25,6 @@ public class TeleportationAreasController : MonoBehaviour
         {
             Area2.SetActive(true);
         }
-
     }
+
 }

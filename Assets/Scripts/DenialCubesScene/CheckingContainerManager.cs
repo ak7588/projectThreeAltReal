@@ -81,6 +81,7 @@ public class CheckingContainerManager : MonoBehaviour
 
         if (audioCounter == 1)
         {
+            playOnAwake.Stop();
             wrong1.Play();
             audioCounter++;
         }

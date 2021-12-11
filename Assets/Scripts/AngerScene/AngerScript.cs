@@ -7,12 +7,17 @@ public class AngerScript : MonoBehaviour
     public Material right, wrong, defaultMaterial;
     public GameObject container;
 
+    public AudioSource completedAudio;
+
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Anger"))
         {
             gameObject.GetComponent<MeshRenderer>().material = right;
             GameObject.Find("gateRed").GetComponent<GateController>().isCompleted = true; // check if completed
+            StartCoroutine("playAudio");
         }
         else if(other.gameObject.CompareTag("Bargain") || other.gameObject.CompareTag("Denial") || other.gameObject.CompareTag("Depression") || other.gameObject.CompareTag("Acceptance"))
         {
@@ -23,6 +28,11 @@ public class AngerScript : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         container.GetComponent<MeshRenderer>().material = defaultMaterial;
+    }
+    IEnumerator playAudio()
+    {
+        completedAudio.Play();
+        yield return null;
     }
 
 }

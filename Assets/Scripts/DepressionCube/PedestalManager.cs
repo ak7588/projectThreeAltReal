@@ -9,17 +9,18 @@ public class PedestalManager : MonoBehaviour
     public Material gray;
 
     public Material passMaterial;
-    //public GameObject gem;
+    public AudioSource onAwake;
+    public AudioSource onSuccess;
+    public AudioSource onFail;
 
     private void Awake()
     {
         if (GameObject.Find("BlueJewel") != null)
         {
             GameObject.Find("BlueJewel").transform.GetChild(0).GetComponent<MeshRenderer>().material = gray;
-
-
         }
-        
+        onAwake.Play();
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,6 +34,7 @@ public class PedestalManager : MonoBehaviour
         {
             GetComponent<MeshRenderer>().material = passMaterial;
             GameObject.Find("gateBlue").GetComponent<GateController>().isCompleted = true; // check if completed
+            StartCoroutine("PlayAudio");
         }
     }
 
@@ -41,6 +43,13 @@ public class PedestalManager : MonoBehaviour
         var rand = Random.onUnitSphere;
         rand.y = launchVelocity;
         other.GetComponent<Rigidbody>().AddForce(rand);
+        onFail.Play();
+        yield return null;
+    }
+
+    IEnumerator PlayAudio()
+    {
+        onSuccess.Play();
         yield return null;
     }
 }
